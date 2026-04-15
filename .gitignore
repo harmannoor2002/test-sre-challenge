@@ -1,8 +1,13 @@
-venv/
-app/venv/
-*.pyc
-__pycache__/
+# Terraform
 .terraform/
-terraform.tfstate
-terraform.tfstate.backup
+*.tfstate
+*.tfstate.backup
+crash.log
 
+# Python
+venv/
+__pycache__/
+*.pyc
+
+# IDE
+.vscode/
