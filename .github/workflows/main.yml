@@ -30,19 +30,29 @@ jobs:
         run: |
           docker build -t test-sre-app .
 
+      # AWS login (IMPORTANT)
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-south-1   # change if needed
+
+      # Install kubectl
       - name: Setup kubectl
         uses: azure/setup-kubectl@v4
 
+      # Install helm
       - name: Setup Helm
         uses: azure/setup-helm@v4
 
-      - name: Deploy with Helm
-        env:
-          KUBECONFIG_DATA: ${{ secrets.KUBECONFIG_DATA }}
+      # Get EKS kubeconfig automatically
+      - name: Update kubeconfig
         run: |
-          echo "$KUBECONFIG_DATA" | base64 -d > kubeconfig
-          export KUBECONFIG=$PWD/kubeconfig
+          aws eks update-kubeconfig \
+            --name YOUR_EKS_CLUSTER_NAME \
+            --region ap-south-1
 
+      - name: Deploy with Helm
+        run: |
           helm upgrade --install test-release helm-chart/test-sre-chart
-
-
