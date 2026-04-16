@@ -50,7 +50,7 @@ jobs:
       - name: Update kubeconfig
         run: |
           aws eks update-kubeconfig \
-            --name YOUR_EKS_CLUSTER_NAME \
+            --name test-sre-cluster \
             --region us-east-2
 
       - name: Deploy with Helm
